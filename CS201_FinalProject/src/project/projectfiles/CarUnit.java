@@ -15,14 +15,16 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
 public class CarUnit {
-    public MapRectangleImpl car;
+    public MapRectangle car;
     public double speed;
     public Point position;
     public CarModel model;
     public Layer layer;
+    private CarController controller;
     public CarUnit(Layer layer, String name, Coordinate a, Coordinate b)
     {
-        this.car = new MapRectangleImpl(layer, name, a, b);
+        this.car = new CarView(this, layer, name, a, b);
+        this.controller = new CarController(this);
     }
     public CarUnit(Layer layer)
     {
@@ -47,5 +49,9 @@ public class CarUnit {
     public Layer getLayer()
     {
         return this.layer;
+    }
+    public void click()
+    {
+        this.controller.actionOnClick();
     }
 }

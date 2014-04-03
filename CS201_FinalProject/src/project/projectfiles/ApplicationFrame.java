@@ -34,8 +34,8 @@ public class ApplicationFrame extends JFrame{
     }
     public void refreshData(JSONArray data)
     {
-        CarModelBuilder carModelBuilder = new CarModelBuilder(data);
-        ArrayList<CarModel> carModels = carModelBuilder.createModels();
+        CarModelFactory carModelFactory = new CarModelFactory(data);
+        ArrayList<CarModel> carModels = carModelFactory.createModels();
         this.currentData = carModels;
         this.mapView.refreshData(carModels);
     }

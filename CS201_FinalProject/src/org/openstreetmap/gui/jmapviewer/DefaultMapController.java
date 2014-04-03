@@ -8,8 +8,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
+
+import project.projectfiles.CarUnit;
+import project.projectfiles.CarView;
 
 public class DefaultMapController extends JMapController implements MouseMotionListener,
 MouseWheelListener, KeyListener, MouseListener {
@@ -156,7 +162,18 @@ MouseWheelListener, KeyListener, MouseListener {
     public void mouseClicked(MouseEvent arg0) {
         // TODO Auto-generated method stub
         Coordinate alpha = map.getPosition(new Point(arg0.getX(), arg0.getY()));
-        map.addMapMarker(new MapMarkerDot(alpha.getLat(), alpha.getLon()));
+        List<MapRectangle> cars = map.getMapRectangleList();
+        for(MapRectangle carView: cars)
+        {
+            if(carView instanceof CarView)
+            {
+               if(((CarView) carView).contains(alpha)){
+                  CarUnit car = ((CarView)carView).getCar();
+                  car.click();
+               }
+            }
+        }
+     //   map.addMapMarker(new MapMarkerDot(alpha.getLat(), alpha.getLon()));
     }
 
     @Override

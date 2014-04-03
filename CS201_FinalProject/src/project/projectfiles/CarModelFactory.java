@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class CarModelBuilder {
+public class CarModelFactory {
     private JSONArray data;
-    public CarModelBuilder(JSONArray data)
+    public CarModelFactory(JSONArray data)
     {
         this.data = data;
     }
@@ -26,14 +26,14 @@ public class CarModelBuilder {
             if(sp instanceof Double) speed = (Double)sp;
             String directionString = null, onOffRampString = null, freewayString = null;
             Object dir = objectData.get("direction");
-            Object onOff = objectData.get("on\\/off ramp");
+            Object onOff = objectData.get("on/off ramp");
             Object freeway = objectData.get("freeway");
             if(dir instanceof String) directionString = (String)dir;
             if(onOff instanceof String) onOffRampString = (String)onOff;
             if(freeway instanceof String)freewayString = (String)freeway;
             CarModel temp = new CarModel(idString.toString(), speed, directionString, onOffRampString, freewayString);
             carModels.add(temp);
-            System.out.println(idString.toString() + " " + speed + " " + directionString + " "+ onOffRampString + " " + freewayString);
+           //  System.out.println(idString.toString() + " " + speed + " " + directionString + " "+ onOffRampString + " " + freewayString);
         }
         return carModels;
     }

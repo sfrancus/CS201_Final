@@ -46,14 +46,14 @@ public class ApplicationMapViewer extends JPanel {
     private JMapViewer newMap;
     public ApplicationMapViewer()
     {
+        this.cars = new ArrayList<CarUnit>();
         newMap = new JMapViewer();
         LayerGroup carLayerGroup = new LayerGroup("Active Cars");
         Layer layer = new Layer("USA");
-        CarUnit car1 = new CarUnit(layer, "Car 1", new Coordinate(34.055, -118.252), new Coordinate(34.05, -118.25));
+        CarUnit car1 = new CarUnit(layer, "Car 1", new Coordinate(34.055, -118.252), new Coordinate(34.050, -118.250));
         //car1.car.setColor(Color.RED);
         Layer wales = new Layer("UK");
         newMap.addMapRectangle(car1.car);
-
         newMap.setScrollWrapEnabled(true);
         newMap.setFocusable(true);
         newMap.setPreferredSize(new Dimension(800,600));
@@ -67,19 +67,32 @@ public class ApplicationMapViewer extends JPanel {
     }
     public void refreshData(ArrayList<CarModel> carModels)
     {
+        Color colorArray[] = {Color.RED, Color.GREEN, Color.BLUE};
         this.cars.clear();
         int i = 0;
-        for(CarModel carModel: carModels)
+        java.util.List<MapRectangle> a = newMap.getMapRectangleList();
+
+        for(MapRectangle as: a)
+        {
+            if(as instanceof CarView)
+            {
+                //System.out.println((int)(Math.random()*3));
+                ((CarView) as).setColor(colorArray[(int)(Math.random()*3)]);
+            }
+        }
+        this.newMap.repaint();
+        this.repaint();
+        /*for(CarModel carModel: carModels)
         {
            CarUnit newCar = new CarUnit(new Layer(Integer.toString(i)));
            newCar.attachCarModel(carModel);
            this.cars.add(newCar);
            i++;
-        }
-        newMap.removeAllMapRectangles();
+        }*/
+        //newMap.removeAllMapRectangles();
         for(CarUnit car: this.cars)
         {
-            newMap.addMapRectangle(car.car);
+           // newMap.addMapRectangle(car.car);
         }
        
     }
