@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
 public class IntelligentTrafficApplication extends JFrame {
     public static final String JSON_URL = "http://www-scf.usc.edu/~csci201/mahdi_project/test.json";
     public static final Object errorButtonOptions[] = {"Refresh", "Exit"};
-    public static final int REFRESH_TIME = 5;
+    public static final int REFRESH_TIME = 180;
     public static void main(String[] args)
     {
         final JSONArrayWrapper jsonArray = new JSONArrayWrapper();
@@ -53,6 +53,6 @@ public class IntelligentTrafficApplication extends JFrame {
             }
         }, 0, REFRESH_TIME, TimeUnit.SECONDS);
         
-        //ApplicationMapViewer map = new ApplicationMapViewer();
+     
     }
 }

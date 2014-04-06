@@ -33,7 +33,7 @@ public class CarModelFactory {
             if(freeway instanceof String)freewayString = (String)freeway;
             CarModel temp = new CarModel(idString.toString(), speed, directionString, onOffRampString, freewayString);
             carModels.add(temp);
-           //  System.out.println(idString.toString() + " " + speed + " " + directionString + " "+ onOffRampString + " " + freewayString);
+           
         }
         return carModels;
     }

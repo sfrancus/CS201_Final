@@ -14,7 +14,8 @@ import org.json.simple.JSONArray;
 
 public class ApplicationFrame extends JFrame{
     private ArrayList<CarModel> currentData;
-    ApplicationMapViewer mapView;
+    private ApplicationMapViewer mapView;
+    private HistoricalDataViewer historicalView;
     public ApplicationFrame(String name)
     {
         super(name);
@@ -25,9 +26,9 @@ public class ApplicationFrame extends JFrame{
         container.setBackground(Color.WHITE);
         JTabbedPane tabs = new JTabbedPane();
         mapView = new ApplicationMapViewer();
-        JPanel placeholder = new JPanel();
+        historicalView = new HistoricalDataViewer();
         tabs.addTab("Map View", mapView);
-        tabs.addTab("Historical Data", placeholder);
+        tabs.addTab("Historical Data", historicalView);
         container.add(tabs, BorderLayout.CENTER);
         this.add(container, BorderLayout.CENTER);
         this.setVisible(true);
@@ -38,6 +39,9 @@ public class ApplicationFrame extends JFrame{
         ArrayList<CarModel> carModels = carModelFactory.createModels();
         this.currentData = carModels;
         this.mapView.refreshData(carModels);
+        DatabasePreprocessor dpp = new DatabasePreprocessor(carModels);
+        Map processedData = dpp.processData("average_number_of_cars", "average_speed_of_cars");
+        this.historicalView.refreshData(processedData);
     }
     public boolean hasAvailableData()
     {

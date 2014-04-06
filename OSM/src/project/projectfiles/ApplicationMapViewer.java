@@ -34,6 +34,7 @@ import org.openstreetmap.gui.jmapviewer.Layer;
 import org.openstreetmap.gui.jmapviewer.LayerGroup;
 import org.openstreetmap.gui.jmapviewer.MapRectangleImpl;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
@@ -50,10 +51,10 @@ public class ApplicationMapViewer extends JPanel {
         newMap = new JMapViewer();
         LayerGroup carLayerGroup = new LayerGroup("Active Cars");
         Layer layer = new Layer("USA");
-        CarUnit car1 = new CarUnit(layer, "Car 1", new Coordinate(34.055, -118.252), new Coordinate(34.050, -118.250));
+        CarUnit car1 = new CarUnit(layer, "Car 1", new Coordinate(34.050, -118.250));
         //car1.car.setColor(Color.RED);
         Layer wales = new Layer("UK");
-        newMap.addMapRectangle(car1.car);
+        newMap.addMapMarker(car1.car);
         newMap.setScrollWrapEnabled(true);
         newMap.setFocusable(true);
         newMap.setPreferredSize(new Dimension(800,600));
@@ -70,14 +71,15 @@ public class ApplicationMapViewer extends JPanel {
         Color colorArray[] = {Color.RED, Color.GREEN, Color.BLUE};
         this.cars.clear();
         int i = 0;
-        java.util.List<MapRectangle> a = newMap.getMapRectangleList();
+        java.util.List<MapMarker> a = newMap.getMapMarkerList();
 
-        for(MapRectangle as: a)
+        for(MapMarker as: a)
         {
             if(as instanceof CarView)
             {
                 //System.out.println((int)(Math.random()*3));
                 ((CarView) as).setColor(colorArray[(int)(Math.random()*3)]);
+                ((CarView) as).setBackColor(colorArray[(int)(Math.random()*3)]);
             }
         }
         this.newMap.repaint();

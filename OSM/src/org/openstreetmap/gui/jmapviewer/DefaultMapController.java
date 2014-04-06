@@ -162,8 +162,8 @@ MouseWheelListener, KeyListener, MouseListener {
     public void mouseClicked(MouseEvent arg0) {
         // TODO Auto-generated method stub
         Coordinate alpha = map.getPosition(new Point(arg0.getX(), arg0.getY()));
-        List<MapRectangle> cars = map.getMapRectangleList();
-        for(MapRectangle carView: cars)
+        List<MapMarker> cars = map.getMapMarkerList();
+        for(MapMarker carView: cars)
         {
             if(carView instanceof CarView)
             {
