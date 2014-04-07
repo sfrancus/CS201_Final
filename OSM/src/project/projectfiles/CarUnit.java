@@ -15,17 +15,22 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
-public class CarUnit {
-    public MapMarker car;
+public class CarUnit implements Runnable{
+    public CarView car;
     public double speed;
     public Point position;
     public CarModel model;
     public Layer layer;
     private CarController controller;
-    public CarUnit(Layer layer, String name, Coordinate a)
+    public CarUnit(double speed, Layer layer, String name, Coordinate a)
     {
-        this.car = new CarView(this, layer, name, a, 0.00007);
+        this.speed = speed;
+        this.car = new CarView(this, layer, name, a, 0.00021);
+        this.model = new CarModel();
+        this.model.setSpeed(speed);
         this.controller = new CarController(this);
+        
+
     }
     public CarUnit(Layer layer)
     {
@@ -54,5 +59,14 @@ public class CarUnit {
     public void click()
     {
         this.controller.actionOnClick();
+    }
+    public void render()
+    {
+        this.car.render();
+    }
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+        this.controller.update();
     }
 }

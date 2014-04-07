@@ -133,4 +133,8 @@ public class CarView extends MapObjectImpl implements MapMarker {
     {
         return (a.getLat() <= this.getLat()+this.radius && a.getLat() >= this.getLat() - this.radius  && a.getLon() <= this.getLon() + this.radius && a.getLon() >= this.getLon() - this.radius);
     }
+    public void render()
+    {
+        this.coord = this.car.model.getPosition();
+    }
 }

@@ -41,7 +41,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 import com.sun.tools.javac.util.List;
 
 
-public class ApplicationMapViewer extends JPanel implements Runnable{
+public class ApplicationMapViewer extends JPanel {
     
     private ArrayList<CarUnit> cars;
     private JMapViewer newMap;
@@ -51,29 +51,40 @@ public class ApplicationMapViewer extends JPanel implements Runnable{
         newMap = new JMapViewer();
         LayerGroup carLayerGroup = new LayerGroup("Active Cars");
         Layer layer = new Layer("USA");
-        CarUnit car1 = new CarUnit(layer, "Car 1", new Coordinate(34.050, -118.250));
+        final CarUnit car1 = new CarUnit(64.7777777, layer, "Car 1", new Coordinate(34.035378, -118.329929));
         //car1.car.setColor(Color.RED);
         Layer wales = new Layer("UK");
         newMap.addMapMarker(car1.car);
         newMap.setScrollWrapEnabled(true);
         newMap.setFocusable(true);
         newMap.setPreferredSize(new Dimension(800,600));
-        newMap.setDisplayPosition(new Coordinate(34.05, -118.25), 18);
+        newMap.setDisplayPosition(new Coordinate(34.05, -118.25), 12);
         DefaultMapController dmc = new DefaultMapController(newMap);
        // dmc.setMovementEnabled(false);
         this.setSize(new Dimension(800, 600));
         this.add(newMap);
         this.setVisible(true);
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable()
+        {
+
+            @Override
+            public void run() {
+                car1.run();
+                
+                repaint();
+            }
+            
+        }, 0, 200, TimeUnit.MILLISECONDS);
         
     }
     public void refreshData(ArrayList<CarModel> carModels)
     {
         Color colorArray[] = {Color.RED, Color.GREEN, Color.BLUE};
         this.cars.clear();
-        int i = 0;
         java.util.List<MapMarker> a = newMap.getMapMarkerList();
 
-        for(MapMarker as: a)
+        /*for(MapMarker as: a)
         {
             if(as instanceof CarView)
             {
@@ -97,11 +108,6 @@ public class ApplicationMapViewer extends JPanel implements Runnable{
            // newMap.addMapRectangle(car.car);
         }
        
-    }
-    @Override
-    public void run() {
-       
-        
     }
 
 }

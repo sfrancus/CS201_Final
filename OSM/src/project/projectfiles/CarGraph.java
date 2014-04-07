@@ -1,23 +1,46 @@
 package project.projectfiles;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class CarGraph {
     private Object mapData[][];
+    private XMLReader XMLReader;
     public CarGraph()
     {
         this.mapData = null;
+        this.XMLReader = new XMLReader();
     }
-    public CarGraph(Object mapData[][])
+    public CarGraph(String onOffRamp, String direction, String freeway)
     {
-        this.mapData = mapData;
-    }
-    public List<Coordinate> generateRoute(String key, String direction)
-    {
-        return null;
+        this.mapData = null;
         
+    }
+    public List<Coordinate> generateRoute(String fileName, String direction)
+    {
+        this.XMLReader.setFile(fileName);
+        Map<Integer, ArrayList<String>> parsedFile = this.XMLReader.parseByTags("rtept", "lat", "lon");
+        List<Coordinate> mapCoordinates = new ArrayList<Coordinate>();
+        System.out.println(parsedFile.size());
+        for(int i = 0; i < parsedFile.size(); i++)
+        {
+            ArrayList<String> LAT_LONG = parsedFile.get(i);
+            try{
+            double latitude = Double.parseDouble(LAT_LONG.get(0));
+            double longitude = Double.parseDouble(LAT_LONG.get(1));
+            Coordinate a = new Coordinate(latitude, longitude);
+            mapCoordinates.add(a);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            
+        }
+        return mapCoordinates;
     }
 
 }

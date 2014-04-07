@@ -10,6 +10,7 @@ public class CarModel {
     {
         this.id = this.direction = this.onOffRamp = this.freeway = "";
         this.speed = 0.0;
+        this.position = null;
     }
     public CarModel(String id, double speed, String direction, String onOffRamp, String freeway)
     {
@@ -18,6 +19,7 @@ public class CarModel {
         this.direction = direction;
         this.onOffRamp = onOffRamp;
         this.freeway = freeway;
+        this.position = null;
     }
     public void setId(String a)
     {
@@ -58,6 +60,14 @@ public class CarModel {
     public String getId()
     {
         return this.id;
+    }
+    public Coordinate getPosition()
+    {
+        return this.position;
+    }
+    public void setPosition(Coordinate a)
+    {
+        this.position = a;
     }
     
 }
