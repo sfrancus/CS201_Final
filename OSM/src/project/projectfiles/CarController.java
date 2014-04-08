@@ -2,6 +2,7 @@ package project.projectfiles;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -22,10 +23,14 @@ public class CarController {
     {
         this.car = e;
         this.router = new CarGraph();
-        this.coordinates = this.router.generateRoute("Interstate10.xml", "east");
+        String freeway = this.car.model.getFreeway();
+        if(freeway.equals("101")) freeway = "105";
+        this.coordinates = this.router.generateRoute(freeway+".xml", "east");
         this.car.car.coord = this.coordinates.get(this.counter);
+        
         this.setCarColor();
     }
+    
     public void actionOnClick()
     {
         JDialog carDialogPane = new JDialog();
@@ -45,12 +50,19 @@ public class CarController {
         double a = 0.0;
         if(this.counter < this.coordinates.size())
         {
+            
             a+=findDistanceBetween(this.car.car.getCoordinate(), this.coordinates.get(this.counter));
-            this.car.model.setPosition(this.coordinates.get(this.counter));
-            //System.out.println(a);
+            int directedMotion = this.counter;
+            if(this.car.model.getDirection().equals("West") || this.car.model.getDirection().equals("South"))
+            directedMotion = this.coordinates.size() - this.counter;
+            this.car.model.setPosition(this.coordinates.get(directedMotion));
+            
             this.car.render();
         }
     }
+    /****
+     * Determines using the distance between coordinates how fast the car will be moving on the map
+     */
     public void proportionalTimeAlgorithm()
     {
         double proportionalChange = this.car.model.getSpeed()/CONV_LONG_LAT_TO_MILE;

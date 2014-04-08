@@ -51,10 +51,10 @@ public class ApplicationMapViewer extends JPanel {
         newMap = new JMapViewer();
         LayerGroup carLayerGroup = new LayerGroup("Active Cars");
         Layer layer = new Layer("USA");
-        final CarUnit car1 = new CarUnit(64.7777777, layer, "Car 1", new Coordinate(34.035378, -118.329929));
+        //final CarUnit car1 = new CarUnit(64.7777777, layer, "Car 1", new Coordinate(34.035378, -118.329929));
         //car1.car.setColor(Color.RED);
         Layer wales = new Layer("UK");
-        newMap.addMapMarker(car1.car);
+        //newMap.addMapMarker(car1.car);
         newMap.setScrollWrapEnabled(true);
         newMap.setFocusable(true);
         newMap.setPreferredSize(new Dimension(800,600));
@@ -70,7 +70,10 @@ public class ApplicationMapViewer extends JPanel {
 
             @Override
             public void run() {
-                car1.run();
+                for(int i = 0; i < cars.size(); i++)
+                {
+                 cars.get(i).run();   
+                }
                 
                 repaint();
             }
@@ -83,30 +86,22 @@ public class ApplicationMapViewer extends JPanel {
         Color colorArray[] = {Color.RED, Color.GREEN, Color.BLUE};
         this.cars.clear();
         java.util.List<MapMarker> a = newMap.getMapMarkerList();
-
-        /*for(MapMarker as: a)
+        java.util.List<CarView> newMapMarkerList = new ArrayList<CarView>();
+        for(int i = 0; i < carModels.size(); i++)
         {
-            if(as instanceof CarView)
-            {
-                //System.out.println((int)(Math.random()*3));
-                ((CarView) as).setColor(colorArray[(int)(Math.random()*3)]);
-                ((CarView) as).setBackColor(colorArray[(int)(Math.random()*3)]);
-            }
+            Layer layer = new Layer("Car" + Integer.toString(i));
+            CarUnit car = new CarUnit(carModels.get(i), layer, Integer.toString(i), new Coordinate(0.0, 0.0));
+            car.attachCarModel(carModels.get(i));
+            
+           this.cars.add(car);
+        }
+        newMap.removeAllMapMarkers();
+        for(CarUnit car: this.cars)
+        {
+           newMap.addMapMarker(car.car);
         }
         this.newMap.repaint();
         this.repaint();
-        /*for(CarModel carModel: carModels)
-        {
-           CarUnit newCar = new CarUnit(new Layer(Integer.toString(i)));
-           newCar.attachCarModel(carModel);
-           this.cars.add(newCar);
-           i++;
-        }*/
-        //newMap.removeAllMapRectangles();
-        for(CarUnit car: this.cars)
-        {
-           // newMap.addMapRectangle(car.car);
-        }
        
     }
 

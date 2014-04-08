@@ -24,7 +24,7 @@ public class CarGraph {
         this.XMLReader.setFile(fileName);
         Map<Integer, ArrayList<String>> parsedFile = this.XMLReader.parseByTags("rtept", "lat", "lon");
         List<Coordinate> mapCoordinates = new ArrayList<Coordinate>();
-        System.out.println(parsedFile.size());
+        
         for(int i = 0; i < parsedFile.size(); i++)
         {
             ArrayList<String> LAT_LONG = parsedFile.get(i);

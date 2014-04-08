@@ -22,15 +22,12 @@ public class CarUnit implements Runnable{
     public CarModel model;
     public Layer layer;
     private CarController controller;
-    public CarUnit(double speed, Layer layer, String name, Coordinate a)
+    public CarUnit(CarModel model, Layer layer, String name, Coordinate a)
     {
-        this.speed = speed;
+        this.speed = model.getSpeed();
         this.car = new CarView(this, layer, name, a, 0.00021);
-        this.model = new CarModel();
-        this.model.setSpeed(speed);
+        this.model = model;
         this.controller = new CarController(this);
-        
-
     }
     public CarUnit(Layer layer)
     {
@@ -47,6 +44,7 @@ public class CarUnit implements Runnable{
     public void attachCarModel(CarModel model)
     {
         this.model = model;
+        //this.update();
     }
     public void setLayer(Layer layer)
     {
