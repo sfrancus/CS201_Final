@@ -52,6 +52,7 @@ public class IntelligentTrafficApplication extends JFrame {
              mainApplication.refreshData(jsonArray.getJSONArray());
             }
         }, 0, REFRESH_TIME, TimeUnit.SECONDS);
+
         
      
     }

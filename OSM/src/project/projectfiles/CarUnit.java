@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
+import java.util.concurrent.Callable;
 
 import javax.swing.ImageIcon;
 
@@ -22,12 +23,13 @@ public class CarUnit implements Runnable{
     public CarModel model;
     public Layer layer;
     private CarController controller;
-    public CarUnit(CarModel model, Layer layer, String name, Coordinate a)
+    public CarUnit(CarModel model, Layer layer, String name)
     {
         this.speed = model.getSpeed();
-        this.car = new CarView(this, layer, name, a, 0.00021);
+        this.car = new CarView(this, layer, name, new Coordinate(0.0,0.0), 0.000051);
         this.model = model;
         this.controller = new CarController(this);
+        //  this.car.coord = this.controller.findClosestExit();
     }
     public CarUnit(Layer layer)
     {
@@ -67,4 +69,9 @@ public class CarUnit implements Runnable{
         // TODO Auto-generated method stub
         this.controller.update();
     }
+    public int getRate()
+    {
+        return this.controller.getRate();
+    }
+
 }

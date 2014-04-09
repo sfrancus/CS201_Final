@@ -3,7 +3,9 @@ package project.projectfiles;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -19,16 +21,19 @@ public class CarController {
     private CarGraph router;
     private List<Coordinate> coordinates;
     private int counter;
+    private XMLReader exitParser;
+    private int animationRateInMilliseconds;
     public CarController(CarUnit e)
     {
         this.car = e;
         this.router = new CarGraph();
         String freeway = this.car.model.getFreeway();
-        if(freeway.equals("101")) freeway = "105";
-        this.coordinates = this.router.generateRoute(freeway+".xml", "east");
+        this.coordinates = this.router.generateRoute(freeway+this.car.model.getDirection() + "Route"+".xml");
         this.car.car.coord = this.coordinates.get(this.counter);
-        
+        this.exitParser = new XMLReader(freeway + this.car.model.getDirection() + ".xml");
+       
         this.setCarColor();
+        this.findClosestExit();
     }
     
     public void actionOnClick()
@@ -36,7 +41,7 @@ public class CarController {
         JDialog carDialogPane = new JDialog();
         carDialogPane.setSize(new Dimension(400, 400));
         carDialogPane.setTitle("Car Information");
-        carDialogPane.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        carDialogPane.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JPanel dialogPanel = new JPanel();
         JLabel speed = new JLabel("Speed: " + this.car.speed + " mph ");
         dialogPanel.add(speed);
@@ -51,10 +56,9 @@ public class CarController {
         if(this.counter < this.coordinates.size())
         {
             
-            a+=findDistanceBetween(this.car.car.getCoordinate(), this.coordinates.get(this.counter));
+            //System.out.println(findDistanceBetween(this.car.car.getCoordinate(), this.coordinates.get(this.counter)));
             int directedMotion = this.counter;
-            if(this.car.model.getDirection().equals("West") || this.car.model.getDirection().equals("South"))
-            directedMotion = this.coordinates.size() - this.counter;
+          
             this.car.model.setPosition(this.coordinates.get(directedMotion));
             
             this.car.render();
@@ -65,7 +69,11 @@ public class CarController {
      */
     public void proportionalTimeAlgorithm()
     {
-        double proportionalChange = this.car.model.getSpeed()/CONV_LONG_LAT_TO_MILE;
+        if(this.counter < this.coordinates.size() - 1){
+        double distance = findDistanceBetween(this.coordinates.get(this.counter), this.coordinates.get(this.counter+1));
+        int timeInterval = (int)(distance/(this.car.model.getSpeed()/3600000));
+        this.animationRateInMilliseconds = timeInterval/50;
+        }
     }
     /****
      * implements the Haversine formula in Java to determine the distance (in miles) between two coordinates
@@ -97,5 +105,38 @@ public class CarController {
         {
             this.car.car.setBackColor(Color.GREEN);
         }
+    }
+    public Coordinate findClosestExit()
+    {
+        if(this.car.model.getFreeway().equals("105") || this.car.model.getFreeway().equals("405")){
+            String exit = this.car.model.getOnOffRamp();
+        Coordinate exitCoord = null;
+        Map<Integer, ArrayList<String>> parsedData = this.exitParser.parseByTags("exit", "lat", "lon", "stop");
+        for(int i = 0; i < parsedData.size(); i++)
+        {
+           
+            String parsed = parsedData.get(i).get(2).replace(" ", "");
+            String parsedExit = exit.replace(" ", "");
+           //System.out.println(parsed + "         " + parsedExit);
+            if(parsed.equals(parsedExit))
+            {       
+                
+                System.out.println('n');
+                String lat = parsedData.get(i).get(0);
+                String lon = parsedData.get(i).get(1);
+                exitCoord = new Coordinate(Double.parseDouble(lat), Double.parseDouble(lon));
+            }
+        }
+        if(exitCoord!=null)
+        //System.out.println(exitCoord.toString());
+        
+        return null;
+        }
+        return null;
+    }
+    public int getRate()
+    {
+        proportionalTimeAlgorithm();
+        return this.animationRateInMilliseconds;
     }
 }

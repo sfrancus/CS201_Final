@@ -19,7 +19,7 @@ public class CarGraph {
         this.mapData = null;
         
     }
-    public List<Coordinate> generateRoute(String fileName, String direction)
+    public List<Coordinate> generateRoute(String fileName)
     {
         this.XMLReader.setFile(fileName);
         Map<Integer, ArrayList<String>> parsedFile = this.XMLReader.parseByTags("rtept", "lat", "lon");

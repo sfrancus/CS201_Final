@@ -31,10 +31,21 @@ public class CarModelFactory {
             if(dir instanceof String) directionString = (String)dir;
             if(onOff instanceof String) onOffRampString = (String)onOff;
             if(freeway instanceof String)freewayString = (String)freeway;
-            CarModel temp = new CarModel(idString.toString(), speed, directionString, onOffRampString, freewayString);
+            String onOffRampStr = onOffRampString.replace('?', ' ').trim();
+
+            CarModel temp = new CarModel(idString.toString(), speed, directionString, onOffRampStr, freewayString);
             carModels.add(temp);
            
         }
         return carModels;
+    }
+    /***
+     * I'm pissed off, it's 12 days before code is due and the data is still corrupted
+     * @return
+     */
+    public String fixFreewayBecauseMahdiCantFixHisData(String corruptedFreeway)
+    {
+        corruptedFreeway.replace('?', ' ');
+        return corruptedFreeway;
     }
 }

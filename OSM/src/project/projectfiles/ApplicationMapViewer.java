@@ -18,8 +18,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
@@ -42,9 +46,10 @@ import com.sun.tools.javac.util.List;
 
 
 public class ApplicationMapViewer extends JPanel {
-    
+    private static final int REFRESH_RATE = 50;
     private ArrayList<CarUnit> cars;
     private JMapViewer newMap;
+    private ArrayList<Timer> timers;
     public ApplicationMapViewer()
     {
         this.cars = new ArrayList<CarUnit>();
@@ -64,37 +69,51 @@ public class ApplicationMapViewer extends JPanel {
         this.setSize(new Dimension(800, 600));
         this.add(newMap);
         this.setVisible(true);
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(new Runnable()
+        ExecutorService exec = Executors.newFixedThreadPool(10);
+        
+        /*exec.scheduleAtFixedRate(new Runnable()
         {
 
             @Override
             public void run() {
                 for(int i = 0; i < cars.size(); i++)
-                {
-                 cars.get(i).run();   
+               {
+                 cars.get(i).run();
+                 
+                 
                 }
                 
                 repaint();
             }
             
-        }, 0, 200, TimeUnit.MILLISECONDS);
+        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);*/
+        
         
     }
     public void refreshData(ArrayList<CarModel> carModels)
     {
-        Color colorArray[] = {Color.RED, Color.GREEN, Color.BLUE};
+        
         this.cars.clear();
-        java.util.List<MapMarker> a = newMap.getMapMarkerList();
-        java.util.List<CarView> newMapMarkerList = new ArrayList<CarView>();
         for(int i = 0; i < carModels.size(); i++)
         {
             Layer layer = new Layer("Car" + Integer.toString(i));
-            CarUnit car = new CarUnit(carModels.get(i), layer, Integer.toString(i), new Coordinate(0.0, 0.0));
-            car.attachCarModel(carModels.get(i));
-            
+            final CarUnit car = new CarUnit(carModels.get(i), layer, Integer.toString(i));
+            final Timer time = new Timer();
+            class Task extends TimerTask {
+                @Override
+                public void run() {
+                    int newStepTime = car.getRate();
+                    car.run();
+                    repaint();
+                    time.schedule(new Task(), newStepTime);
+                }
+
+            }
+           Task thisTask = new Task();
+           thisTask.run();
            this.cars.add(car);
         }
+        
         newMap.removeAllMapMarkers();
         for(CarUnit car: this.cars)
         {
