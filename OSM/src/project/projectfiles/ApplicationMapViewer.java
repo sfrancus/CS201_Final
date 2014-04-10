@@ -63,7 +63,7 @@ public class ApplicationMapViewer extends JPanel {
         newMap.setFocusable(true);
         newMap.setPreferredSize(new Dimension(800,600));
         newMap.setDisplayPosition(new Coordinate(34.05, -118.25), 12);
-        DefaultMapController dmc = new DefaultMapController(newMap);
+       // DefaultMapController dmc = new DefaultMapController(newMap);
        // dmc.setMovementEnabled(false);
         this.setSize(new Dimension(800, 600));
         this.add(newMap);

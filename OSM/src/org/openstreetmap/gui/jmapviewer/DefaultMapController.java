@@ -1,6 +1,7 @@
 package org.openstreetmap.gui.jmapviewer;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -11,11 +12,14 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
 import project.projectfiles.CarUnit;
 import project.projectfiles.CarView;
+
 
 public class DefaultMapController extends JMapController implements MouseMotionListener,
 MouseWheelListener, KeyListener, MouseListener {
@@ -31,12 +35,12 @@ MouseWheelListener, KeyListener, MouseListener {
     private Point lastDragPoint;
 
     private boolean isMoving = false;
-
+    private boolean enableMapMarkers = false;
     private boolean movementEnabled = true;
 
     private int movementMouseButton = MouseEvent.BUTTON3;
     private int movementMouseButtonMask = MouseEvent.BUTTON3_DOWN_MASK;
-
+    private long lastClick;
     private boolean wheelZoomEnabled = true;
     private boolean doubleClickZoomEnabled = true;
 
@@ -143,7 +147,6 @@ MouseWheelListener, KeyListener, MouseListener {
     @Override
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
-        System.out.println("DDD");
     }
 
     @Override
@@ -160,19 +163,7 @@ MouseWheelListener, KeyListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent arg0) {
-        // TODO Auto-generated method stub
-        Coordinate alpha = map.getPosition(new Point(arg0.getX(), arg0.getY()));
-        List<MapMarker> cars = map.getMapMarkerList();
-        for(MapMarker carView: cars)
-        {
-            if(carView instanceof CarView)
-            {
-               if(((CarView) carView).contains(alpha)){
-                  CarUnit car = ((CarView)carView).getCar();
-                  car.click();
-               }
-            }
-        }
+
      //   map.addMapMarker(new MapMarkerDot(alpha.getLat(), alpha.getLon()));
     }
 
@@ -185,6 +176,33 @@ MouseWheelListener, KeyListener, MouseListener {
     @Override
     public void mouseReleased(MouseEvent arg0) {
         // TODO Auto-generated method stub
+       //synchronized(this){
+        // TODO Auto-generated method stub
+       // System.out.println("Count of listeners: " + arg0.getSource().toString()); 
+        if(this.enableMapMarkers)
+        {
+            Coordinate alpha = map.getPosition(arg0.getPoint());
+            map.addMapMarker(new MapMarkerDot(alpha.getLat(), alpha.getLon()));
+         //   this.enableMapMarkers = false;
+        }
+        else {
+        if(System.currentTimeMillis() < this.lastClick + 100) return;
         
+        Coordinate alpha = map.getPosition(new Point(arg0.getX(), arg0.getY()));
+        List<MapMarker> cars = map.getMapMarkerList();
+        for(MapMarker carView: cars)
+        {
+            if(carView instanceof CarView)
+            {
+               if(((CarView) carView).contains(alpha)){
+                  CarUnit car = ((CarView)carView).getCar();
+                  boolean dick = car.click();
+                  //System.out.println(dick);
+               }
+            }
+        }
+        }
+        lastClick = System.currentTimeMillis();
+     //   }
     }
 }

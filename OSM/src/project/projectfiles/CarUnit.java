@@ -46,7 +46,6 @@ public class CarUnit implements Runnable{
     public void attachCarModel(CarModel model)
     {
         this.model = model;
-        //this.update();
     }
     public void setLayer(Layer layer)
     {
@@ -56,9 +55,11 @@ public class CarUnit implements Runnable{
     {
         return this.layer;
     }
-    public void click()
+    public boolean click()
     {
-        this.controller.actionOnClick();
+       boolean ans = this.controller.actionOnClick();
+       System.out.println(ans);
+       return ans;
     }
     public void render()
     {

@@ -2,12 +2,17 @@ package project.projectfiles;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,18 +42,33 @@ public class CarController {
         this.findClosestExit();
     }
     
-    public void actionOnClick()
+    public boolean actionOnClick()
     {
-        JDialog carDialogPane = new JDialog();
+        final JDialog carDialogPane = new JDialog();
         carDialogPane.setSize(new Dimension(400, 400));
         carDialogPane.setTitle("Car Information");
         carDialogPane.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JPanel dialogPanel = new JPanel();
         JLabel speed = new JLabel("Speed: " + this.car.speed + " mph ");
+        JButton routing = new JButton("Find route");
+        final boolean bool[] = new boolean[1];
+        routing.addMouseListener(new MouseAdapter()
+        {
+
+            @Override
+            public void mouseClicked(MouseEvent me) {
+                // TODO Auto-generated method stub
+                bool[0] = true;
+                carDialogPane.dispose();
+            }
+        });
         dialogPanel.add(speed);
+        dialogPanel.add(routing);
         carDialogPane.add(dialogPanel);
         carDialogPane.setLocationRelativeTo(null);
         carDialogPane.setVisible(true);
+        if(bool[0]==true) return true;
+        else return false;
     }
     public void update()
     {
