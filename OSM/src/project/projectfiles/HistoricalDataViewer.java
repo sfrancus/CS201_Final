@@ -20,13 +20,13 @@ public class HistoricalDataViewer extends JPanel{
     }
     public void refreshData(Map data)
     {
-       try {
+     /*  try {
          
-        this.SQLReader.updateData(data);
+        //this.SQLReader.updateData(data);
     } catch (SQLException e) {
          
         e.printStackTrace();
-    }
+    }*/
     }
 
 }

@@ -26,7 +26,7 @@ public class CarUnit implements Runnable{
     public CarUnit(CarModel model, Layer layer, String name)
     {
         this.speed = model.getSpeed();
-        this.car = new CarView(this, layer, name, new Coordinate(0.0,0.0), 0.000051);
+        this.car = new CarView(this, layer, name, new Coordinate(0.0,0.0), 0.0001);
         this.model = model;
         this.controller = new CarController(this);
         //  this.car.coord = this.controller.findClosestExit();
@@ -65,13 +65,18 @@ public class CarUnit implements Runnable{
         this.car.render();
     }
     @Override
-    public void run() {
+    public synchronized void run() {
         // TODO Auto-generated method stub
         this.controller.update();
     }
-    public int getRate()
+
+    public void setElapsedTime(long d)
     {
-        return this.controller.getRate();
+        this.model.setElapsedTime(d);
+    }
+    public long getElapsedTime()
+    {
+        return this.model.getElapsedTime();
     }
 
 }

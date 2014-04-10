@@ -46,10 +46,9 @@ import com.sun.tools.javac.util.List;
 
 
 public class ApplicationMapViewer extends JPanel {
-    private static final int REFRESH_RATE = 50;
+    private static final int REFRESH_RATE = 25;
     private ArrayList<CarUnit> cars;
     private JMapViewer newMap;
-    private ArrayList<Timer> timers;
     public ApplicationMapViewer()
     {
         this.cars = new ArrayList<CarUnit>();
@@ -69,49 +68,39 @@ public class ApplicationMapViewer extends JPanel {
         this.setSize(new Dimension(800, 600));
         this.add(newMap);
         this.setVisible(true);
-        ExecutorService exec = Executors.newFixedThreadPool(10);
-        
-        /*exec.scheduleAtFixedRate(new Runnable()
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable()
         {
 
             @Override
             public void run() {
+                synchronized(cars){
                 for(int i = 0; i < cars.size(); i++)
-               {
-                 cars.get(i).run();
-                 
-                 
-                }
-                
+                {
+                       cars.get(i).setElapsedTime(cars.get(i).getElapsedTime() + REFRESH_RATE);
+                       cars.get(i).run();
+                      
+                   
+                }}
                 repaint();
+                
             }
             
-        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);*/
-        
+        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
+       
         
     }
     public void refreshData(ArrayList<CarModel> carModels)
     {
-        
         this.cars.clear();
+        synchronized(this.cars){
         for(int i = 0; i < carModels.size(); i++)
         {
             Layer layer = new Layer("Car" + Integer.toString(i));
-            final CarUnit car = new CarUnit(carModels.get(i), layer, Integer.toString(i));
-            final Timer time = new Timer();
-            class Task extends TimerTask {
-                @Override
-                public void run() {
-                    int newStepTime = car.getRate();
-                    car.run();
-                    repaint();
-                    time.schedule(new Task(), newStepTime);
-                }
+            CarUnit car = new CarUnit(carModels.get(i), layer, Integer.toString(i));
+          
+            this.cars.add(car);
 
-            }
-           Task thisTask = new Task();
-           thisTask.run();
-           this.cars.add(car);
         }
         
         newMap.removeAllMapMarkers();
@@ -121,7 +110,7 @@ public class ApplicationMapViewer extends JPanel {
         }
         this.newMap.repaint();
         this.repaint();
-       
+        }
     }
 
 }

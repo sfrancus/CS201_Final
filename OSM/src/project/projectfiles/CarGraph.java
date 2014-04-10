@@ -22,7 +22,7 @@ public class CarGraph {
     public List<Coordinate> generateRoute(String fileName)
     {
         this.XMLReader.setFile(fileName);
-        Map<Integer, ArrayList<String>> parsedFile = this.XMLReader.parseByTags("rtept", "lat", "lon");
+        Map<Integer, ArrayList<String>> parsedFile = this.XMLReader.parseByTagsIntegral("rtept", "lat", "lon");
         List<Coordinate> mapCoordinates = new ArrayList<Coordinate>();
         
         for(int i = 0; i < parsedFile.size(); i++)

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,28 +52,41 @@ public class CarController {
     }
     public void update()
     {
+        if(proportionalTimeAlgorithm()){
         this.counter++;
-        double a = 0.0;
         if(this.counter < this.coordinates.size())
         {
-            
-            //System.out.println(findDistanceBetween(this.car.car.getCoordinate(), this.coordinates.get(this.counter)));
             int directedMotion = this.counter;
           
             this.car.model.setPosition(this.coordinates.get(directedMotion));
             
             this.car.render();
         }
+        }
     }
     /****
      * Determines using the distance between coordinates how fast the car will be moving on the map
      */
-    public void proportionalTimeAlgorithm()
+    public boolean proportionalTimeAlgorithm()
     {
         if(this.counter < this.coordinates.size() - 1){
         double distance = findDistanceBetween(this.coordinates.get(this.counter), this.coordinates.get(this.counter+1));
         int timeInterval = (int)(distance/(this.car.model.getSpeed()/3600000));
-        this.animationRateInMilliseconds = timeInterval/50;
+       
+        long elapsedTime = this.car.model.getElapsedTime();
+        if(elapsedTime >= timeInterval)
+        {
+        this.car.model.setElapsedTime(elapsedTime-timeInterval);
+        return true;
+        }
+        else
+        {
+            return false;
+        }
+        }
+        else
+        {
+            return true;
         }
     }
     /****
@@ -106,37 +120,35 @@ public class CarController {
             this.car.car.setBackColor(Color.GREEN);
         }
     }
-    public Coordinate findClosestExit()
+    public void findClosestExit()
     {
-        if(this.car.model.getFreeway().equals("105") || this.car.model.getFreeway().equals("405")){
+        if(!this.car.model.getFreeway().equals("10")){
             String exit = this.car.model.getOnOffRamp();
         Coordinate exitCoord = null;
-        Map<Integer, ArrayList<String>> parsedData = this.exitParser.parseByTags("exit", "lat", "lon", "stop");
-        for(int i = 0; i < parsedData.size(); i++)
+       Map<String, ArrayList<String>> parsedData = this.exitParser.parseByTagsAssociative("exit", "stop", "lat", "lon");
+       try{
+        if(parsedData.containsKey(exit)){
+        exitCoord = new Coordinate(Double.parseDouble(parsedData.get(exit).get(0)), Double.parseDouble(parsedData.get(exit).get(1)));
+        int indexOfMinimum = -1;
+        double minimum = Double.MAX_VALUE;
+
+        for(int i = 0; i < this.coordinates.size(); i++)
         {
-           
-            String parsed = parsedData.get(i).get(2).replace(" ", "");
-            String parsedExit = exit.replace(" ", "");
-           //System.out.println(parsed + "         " + parsedExit);
-            if(parsed.equals(parsedExit))
-            {       
-                
-                System.out.println('n');
-                String lat = parsedData.get(i).get(0);
-                String lon = parsedData.get(i).get(1);
-                exitCoord = new Coordinate(Double.parseDouble(lat), Double.parseDouble(lon));
+            if(findDistanceBetween(exitCoord, this.coordinates.get(i)) < minimum)
+            {
+                indexOfMinimum = i;
+                minimum = findDistanceBetween(exitCoord, this.coordinates.get(i));
             }
         }
-        if(exitCoord!=null)
-        //System.out.println(exitCoord.toString());
-        
-        return null;
+        this.counter = indexOfMinimum;
+        this.car.model.setPosition(this.coordinates.get(indexOfMinimum));
+        this.car.render();
         }
-        return null;
-    }
-    public int getRate()
-    {
-        proportionalTimeAlgorithm();
-        return this.animationRateInMilliseconds;
+        }
+       catch(Exception e)
+       {
+           e.printStackTrace();
+       }
+        }
     }
 }
