@@ -19,7 +19,8 @@ public class ApplicationFrame extends JFrame{
     public ApplicationFrame(String name)
     {
         super(name);
-        this.setSize(new Dimension(800, 600));
+        this.setSize(new Dimension(800, 670));
+        this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JPanel container = new JPanel();
         container.setSize(new Dimension(800, 600));

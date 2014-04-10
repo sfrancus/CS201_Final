@@ -42,7 +42,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
-import com.sun.tools.javac.util.List;
+//import com.sun.tools.javac.util.List;
 
 
 public class ApplicationMapViewer extends JPanel {

@@ -29,7 +29,7 @@ public class SQLFluxCapacitor {
             // Setup the connection with the DB
             this.connect = DriverManager
                 .getConnection("jdbc:mysql://localhost/CarData?"
-                    + "user=root&password=erienne");
+                    + "user=root&password=root");
             // Statements allow to issue SQL queries to the database
             this.statement = connect.createStatement();
           } catch (Exception e) {
