@@ -1,9 +1,11 @@
 package org.openstreetmap.gui.jmapviewer;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -12,13 +14,20 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 
 import project.projectfiles.CarUnit;
 import project.projectfiles.CarView;
+import project.projectfiles.Route;
+import project.projectfiles.RouteGenerator;
 
 
 public class DefaultMapController extends JMapController implements MouseMotionListener,
@@ -30,6 +39,7 @@ MouseWheelListener, KeyListener, MouseListener {
     private static final int MAC_MOUSE_BUTTON3_MASK = MouseEvent.CTRL_DOWN_MASK | MouseEvent.BUTTON1_DOWN_MASK;
     public DefaultMapController(JMapViewer map) {
         super(map);
+        this.routeGenerator = new RouteGenerator(map);
     }
 
     private Point lastDragPoint;
@@ -43,7 +53,9 @@ MouseWheelListener, KeyListener, MouseListener {
     private long lastClick;
     private boolean wheelZoomEnabled = true;
     private boolean doubleClickZoomEnabled = true;
-
+    private RouteGenerator routeGenerator;
+    private Coordinate currentRoutePosition;
+    private CarUnit car;
 
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (wheelZoomEnabled) {
@@ -182,8 +194,17 @@ MouseWheelListener, KeyListener, MouseListener {
         if(this.enableMapMarkers)
         {
             Coordinate alpha = map.getPosition(arg0.getPoint());
-            map.addMapMarker(new MapMarkerDot(alpha.getLat(), alpha.getLon()));
-         //   this.enableMapMarkers = false;
+            MapMarker marker = new MapMarkerDot(alpha.getLat(), alpha.getLon());
+            map.addMapMarker(marker);
+            this.enableMapMarkers = false;
+            Route route = routeGenerator.generateRoute(this.currentRoutePosition, alpha);
+            map.addMapPolygon(route.route);
+            map.repaint();
+            JOptionPane.showMessageDialog(null, "The distance to selected destination is: " + route.distance + " miles. \n The time to the destination at speed limits is: " + route.perfectTime + " seconds. \n The time to destination at current car speed is: " + (double)(route.distance/(this.car.speed/3600)) + " seconds.", "Route data", JOptionPane.DEFAULT_OPTION);
+            map.removeMapPolygon(route.route);
+            map.removeMapMarker(marker);
+            map.repaint();
+            // car.resume();
         }
         else {
         if(System.currentTimeMillis() < this.lastClick + 100) return;
@@ -195,9 +216,16 @@ MouseWheelListener, KeyListener, MouseListener {
             if(carView instanceof CarView)
             {
                if(((CarView) carView).contains(alpha)){
-                  CarUnit car = ((CarView)carView).getCar();
-                  boolean dick = car.click();
-                  //System.out.println(dick);
+                  this.car = ((CarView)carView).getCar();
+                  this.currentRoutePosition = car.model.getPosition();
+                  Object[] options = { "Find route", "Play game" };
+                  int a = JOptionPane.showOptionDialog(null, "The current speed of this car is " + car.speed, "Car Information",
+                  JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                  null, options, options[0]);
+                  if(a == 0)
+                  {
+                      this.enableMapMarkers = true;
+                  }
                }
             }
         }

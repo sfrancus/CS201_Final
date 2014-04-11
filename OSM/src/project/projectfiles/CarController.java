@@ -42,33 +42,32 @@ public class CarController {
         this.findClosestExit();
     }
     
-    public boolean actionOnClick()
+    public void actionOnClick()
     {
-        final JDialog carDialogPane = new JDialog();
+        /*final JDialog carDialogPane = new JDialog();
         carDialogPane.setSize(new Dimension(400, 400));
         carDialogPane.setTitle("Car Information");
         carDialogPane.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JPanel dialogPanel = new JPanel();
         JLabel speed = new JLabel("Speed: " + this.car.speed + " mph ");
         JButton routing = new JButton("Find route");
-        final boolean bool[] = new boolean[1];
         routing.addMouseListener(new MouseAdapter()
         {
 
             @Override
             public void mouseClicked(MouseEvent me) {
                 // TODO Auto-generated method stub
-                bool[0] = true;
-                carDialogPane.dispose();
+                returns.bool = true;
+                carDialogPane.setVisible(false);
+                return;
+           
             }
         });
         dialogPanel.add(speed);
         dialogPanel.add(routing);
         carDialogPane.add(dialogPanel);
         carDialogPane.setLocationRelativeTo(null);
-        carDialogPane.setVisible(true);
-        if(bool[0]==true) return true;
-        else return false;
+        carDialogPane.setVisible(true);*/
     }
     public void update()
     {
@@ -142,7 +141,6 @@ public class CarController {
     }
     public void findClosestExit()
     {
-        if(!this.car.model.getFreeway().equals("10")){
             String exit = this.car.model.getOnOffRamp();
         Coordinate exitCoord = null;
        Map<String, ArrayList<String>> parsedData = this.exitParser.parseByTagsAssociative("exit", "stop", "lat", "lon");
@@ -169,6 +167,5 @@ public class CarController {
        {
            e.printStackTrace();
        }
-        }
     }
 }

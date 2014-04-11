@@ -16,17 +16,16 @@ public class ApplicationFrame extends JFrame{
     private ArrayList<CarModel> currentData;
     private ApplicationMapViewer mapView;
     private HistoricalDataViewer historicalView;
-    public ApplicationFrame(String name)
+    public ApplicationFrame(String name, int width, int height)
     {
         super(name);
-        this.setSize(new Dimension(800, 670));
-        this.setResizable(false);
+        this.setSize(new Dimension(800,670));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         JPanel container = new JPanel();
-        container.setSize(new Dimension(800, 600));
+        container.setSize(new Dimension(800,600));
         container.setBackground(Color.WHITE);
         JTabbedPane tabs = new JTabbedPane();
-        mapView = new ApplicationMapViewer();
+        mapView = new ApplicationMapViewer(800,600);
         historicalView = new HistoricalDataViewer();
         tabs.addTab("Map View", mapView);
         tabs.addTab("Historical Data", historicalView);

@@ -23,7 +23,7 @@ public class IntelligentTrafficApplication extends JFrame {
     public static void main(String[] args)
     {
         final JSONArrayWrapper jsonArray = new JSONArrayWrapper();
-        final ApplicationFrame mainApplication = new ApplicationFrame("Intelligent Traffic Application");
+        final ApplicationFrame mainApplication = new ApplicationFrame("Intelligent Traffic Application", 800, 670);
         final JSONReader jsonParser = new JSONReader(JSON_URL, jsonArray);
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(new Runnable() {

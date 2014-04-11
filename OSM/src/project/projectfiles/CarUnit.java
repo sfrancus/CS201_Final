@@ -23,12 +23,14 @@ public class CarUnit implements Runnable{
     public CarModel model;
     public Layer layer;
     private CarController controller;
+    private boolean setRunnable;
     public CarUnit(CarModel model, Layer layer, String name)
     {
         this.speed = model.getSpeed();
         this.car = new CarView(this, layer, name, new Coordinate(0.0,0.0), 0.0001);
         this.model = model;
         this.controller = new CarController(this);
+        this.setRunnable = true;
         //  this.car.coord = this.controller.findClosestExit();
     }
     public CarUnit(Layer layer)
@@ -55,29 +57,42 @@ public class CarUnit implements Runnable{
     {
         return this.layer;
     }
-    public boolean click()
+    public void click()
     {
-       boolean ans = this.controller.actionOnClick();
-       System.out.println(ans);
-       return ans;
+       
+       this.controller.actionOnClick();
+
     }
     public void render()
     {
+        if(this.setRunnable)
         this.car.render();
     }
     @Override
     public synchronized void run() {
         // TODO Auto-generated method stub
+        if(this.setRunnable)
         this.controller.update();
     }
 
     public void setElapsedTime(long d)
     {
+        if(this.setRunnable)
         this.model.setElapsedTime(d);
     }
     public long getElapsedTime()
     {
+        if(this.setRunnable)
         return this.model.getElapsedTime();
+        return 0;
+    }
+    public void pause()
+    {
+        this.setRunnable = false;
+    }
+    public void resume()
+    {
+        this.setRunnable = true;
     }
 
 }
