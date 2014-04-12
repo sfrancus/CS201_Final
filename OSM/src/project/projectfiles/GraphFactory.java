@@ -110,7 +110,7 @@ public class GraphFactory extends JPanel {
         
         //space + current stats
         JPanel headerPanel = new JPanel();        
-        JLabel currentCarVol = new JLabel("Current " + graphTitle + ": " + dataArray[dataArray.length - 1][1]);
+        JLabel currentCarVol = new JLabel("Current " + graphTitle + ": " + dataArray[dataArray.length - 1][1] + " ");
         currentCarVol.setFont(new Font("sansserif", Font.PLAIN, 20));
         headerPanel.add(currentCarVol);
         
