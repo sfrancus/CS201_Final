@@ -28,14 +28,17 @@ public class ExportWriter {
 	            PrintWriter pw = new PrintWriter(fw);
 	            
 	            //===Output Format===//
-	            // Column 1, Column 2
-	            // data, data
+	            // Column 1: data, data, data
+	            // Column 2: data, data, data
 	            //===================//
 	            //loops over rows of col1
 	            for(int i = 0; i < data.length; i++) {
 	                pw.print(data[i][0] + ",");
-	                pw.print(data[i][1]);
-	                pw.println();
+	            }
+	            pw.println();
+	            //loops over rows of col2
+	            for(int i = 0; i < data.length; i++) {
+	                pw.print(data[i][1] + ",");
 	            }
 	            
 	            pw.flush();

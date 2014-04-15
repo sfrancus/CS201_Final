@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -46,6 +48,7 @@ public class RouteGenerator {
         List<Coordinate> reiseRoute = new ArrayList<Coordinate>();
         double distance = 0.0;
         long perfectTime = 0;
+        try{
         if(this.jsonObject!= null)
         {
             JSONObject shapeData = (JSONObject)((JSONObject)this.jsonObject.get("route")).get("shape");
@@ -67,6 +70,11 @@ public class RouteGenerator {
               reiseRoute.add(coord);
               }
             }
+        }
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Routing failed due to invalid coordinates");
         }
         return new Route(reiseRoute, distance, perfectTime);
     }

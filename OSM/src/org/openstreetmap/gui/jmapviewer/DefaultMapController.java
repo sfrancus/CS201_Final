@@ -11,6 +11,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,17 +193,30 @@ MouseWheelListener, KeyListener, MouseListener {
        //synchronized(this){
         // TODO Auto-generated method stub
        // System.out.println("Count of listeners: " + arg0.getSource().toString()); 
+        NumberFormat nf = new DecimalFormat("#0.0");
         if(this.enableMapMarkers)
         {
             Coordinate alpha = map.getPosition(arg0.getPoint());
             MapMarker marker = new MapMarkerDot(alpha.getLat(), alpha.getLon());
             map.addMapMarker(marker);
             this.enableMapMarkers = false;
-            Route route = routeGenerator.generateRoute(this.currentRoutePosition, alpha);
+            Route route = null;
+            try{
+            route = routeGenerator.generateRoute(this.currentRoutePosition, alpha);
             map.addMapPolygon(route.route);
             map.repaint();
-            JOptionPane.showMessageDialog(null, "The distance to selected destination is: " + route.distance + " miles. \n The time to the destination at speed limits is: " + route.perfectTime + " seconds. \n The time to destination at current car speed is: " + (double)(route.distance/(this.car.speed/3600)) + " seconds.", "Route data", JOptionPane.DEFAULT_OPTION);
+            
+            String dist = nf.format(route.distance);
+            String perf = nf.format(route.perfectTime);
+            String reg = nf.format((double)(route.distance/(this.car.speed/3600)));
+            JOptionPane.showMessageDialog(null, "The distance to selected destination is: " + dist+ " miles. \n The time to the destination at speed limits is: " + perf + " seconds. \n The time to destination at current car speed is: " + reg + " seconds.", "Route data", JOptionPane.DEFAULT_OPTION);
             map.removeMapPolygon(route.route);
+            
+            }
+            catch(Exception e)
+            {
+                //
+            }
             map.removeMapMarker(marker);
             map.repaint();
             // car.resume();
@@ -219,7 +234,8 @@ MouseWheelListener, KeyListener, MouseListener {
                   this.car = ((CarView)carView).getCar();
                   this.currentRoutePosition = car.model.getPosition();
                   Object[] options = { "Find route", "Play game" };
-                  int a = JOptionPane.showOptionDialog(null, "The current speed of this car is " + car.speed, "Car Information",
+                  String speed = nf.format(car.speed);
+                  int a = JOptionPane.showOptionDialog(null, "The current speed of this car is " + speed + " mph.", "Car Information",
                   JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                   null, options, options[0]);
                   if(a == 0)
