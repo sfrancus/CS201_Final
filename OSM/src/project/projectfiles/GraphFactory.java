@@ -48,15 +48,17 @@ public class GraphFactory extends JPanel {
 		//puts data in an array for use elsewhere
 		List l = graphData.getItems();
 		//intialize array
-		dataArray = new Object[l.size()][l.size()];
+		dataArray = new Object[l.size()][2];
 		for(int i = 0; i < l.size(); i++) {
 			XYDataItem item = (XYDataItem) l.get(i);			
 			//add to array
-			dataArray [i][0] = item.getXValue();
+			double inputX = item.getXValue();
+			BigDecimal roundInputX = new BigDecimal(inputX).setScale(2, RoundingMode.HALF_UP);
+			dataArray [i][0] = roundInputX.doubleValue();
 			//truncate if needed
-			double input = item.getYValue();
-			BigDecimal roundInput = new BigDecimal(input).setScale(2, RoundingMode.HALF_UP);
-			dataArray [i][1] = roundInput.doubleValue();
+			double inputY = item.getYValue();
+			BigDecimal roundInputY = new BigDecimal(inputY).setScale(2, RoundingMode.HALF_UP);
+			dataArray [i][1] = roundInputY.doubleValue();
 		}
 		
 		//add it to the entire data set

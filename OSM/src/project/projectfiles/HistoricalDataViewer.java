@@ -36,8 +36,21 @@ public class HistoricalDataViewer extends JPanel implements ActionListener {
             Iterator<?> it = (Iterator<?>) data.entrySet().iterator();
             
             //initialize arrays
-            trafficVol = new Object[data.size()][data.size()];
-            avgSpeed = new Object[data.size()][data.size()];
+            //if database is empty, seed data arrays and map with a bunch of zeros
+            if(data.size() == 0) {
+                trafficVol = new Object[][] {
+                        { 0.0, 0.0, 0.0, 0.0, 0.0 },
+                        { 0.0, 0.0, 0.0, 0.0, 0.0 },
+                      };
+                avgSpeed = new Object[][] {
+                        { 0.0, 0.0, 0.0, 0.0, 0.0 },
+                        { 0.0, 0.0, 0.0, 0.0, 0.0 },
+                      };
+            }
+            else {
+                trafficVol = new Object[data.size()][2];
+                avgSpeed = new Object[data.size()][2];
+            }
             
             int row = 0;
             for(Entry<String, Double[]> entry : data.entrySet()) {
@@ -46,7 +59,7 @@ public class HistoricalDataViewer extends JPanel implements ActionListener {
                 String [] hhmm = time.split(":");
                 int hours = Integer.parseInt(hhmm[0]);
                 int mins = Integer.parseInt(hhmm[1]);
-                double result = (hours * 60 + mins) / 60;
+                double result = ((double)hours * 60 + (double)mins) / 60;
                 
                 //store times
                 trafficVol[row][0] = result;
