@@ -1,0 +1,3 @@
+To set up a database for running this program, make sure you have an instance of MySQL running on your computer or server.
+Secondly, make sure you have write permissions.
+Next, run the included file database_setup.sql
